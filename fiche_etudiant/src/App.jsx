@@ -46,7 +46,7 @@ function App() {
   "ville" : "Chebba",
   "image" : "https://imgs.search.brave.com/21kPXcbbedm1x6DmLjKygIsWiPM_X7H0iCF00r8tOOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2FhLzhj/L2NiL2FhOGNjYmZj/NDlmZWYyNjk5YWVi/OTc5YmY0YmIyZDdm/LmpwZw",
 }
-])
+  ])
   function ajouterEtudiant() {
   const nouvelEtudiant = {
     nom: "Ben Salem",
@@ -54,27 +54,81 @@ function App() {
     mail: "yassine.bensalem@gmail.com",
     number: "+216 97 132 546",
     fil: "Génie Logiciel et Systèmes d'Information",
-    groupe: "GLSI 1",
+    groupe: "GLSI 2",
     ville: "Ariana",
     image: "https://imgs.search.brave.com/qVyKJdQ3T2VpzBwQO5lg-hUi7XTSHLUZlVsLw68GS5A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG5i/LmFydHN0YXRpb24u/Y29tL3AvYXNzZXRz/L2ltYWdlcy9pbWFn/ZXMvMDgxLzE1OS85/NDMvbWVkaXVtL3Vs/bGFzZXUtZnktdHJl/YXN1cmUtbG90b3Mu/anBnPzE3Mjk1NDIz/Njc"
   };
   setEtudiants([...students, nouvelEtudiant]);
   }
+
+  function supprimerEtudiant(mail) {
+    setEtudiants(oldEtudiants =>{return oldEtudiants.filter(etudiant => etudiant.mail !== mail)})
+  }
+
+  function modifierEtudiant(mailanc){
+    const etudiant = students.find((student) => student.mail === mailanc);
+  if (!etudiant) return;
+  function demander(texte, valeur) {
+    const saisie = prompt(texte, valeur);
+    if (saisie === null) return null;
+    const val = saisie.trim();
+    if (val === "") {
+      return valeur;
+  }
+  return val;
+  }
+
+  const nom = demander("Nom :", etudiant.nom);
+  if (nom === null) return;
+  const prenom = demander("Prénom :", etudiant.prenom);
+  if (prenom === null) return;
+  const mail = demander("Email :", etudiant.mail);
+  if (mail === null) return;
+  const number = demander("Téléphone :", etudiant.number);
+  if (number === null) return;
+  const fil = demander("Filière :", etudiant.fil);
+  if (fil === null) return;
+  const groupe = demander("Groupe :", etudiant.groupe);
+  if (groupe === null) return;
+  const ville = demander("Ville :", etudiant.ville);
+  if (ville === null) return;
+  setEtudiants((currentStudents) =>
+    currentStudents.map((student) =>
+      student.mail === mailanc
+        ? { ...student, nom, prenom, mail, number, fil, groupe, ville }
+        : student
+    )
+  );
+  
+  }
+  const [recherche, setRecherche] = useState("");
+  const studentsFiltres = students.filter((student) => {
+  const texte = recherche.toLowerCase();
+  return (
+    student.nom.toLowerCase().includes(texte) ||
+    student.prenom.toLowerCase().includes(texte) ||
+    student.fil.toLowerCase().includes(texte)
+  );
+  });
   return (
     <>
     <Header />
     <Navbar />
+    <input type="text" placeholder='chercher' value={recherche} onChange={(event) => setRecherche(event.target.value)}/>
       <div className='Student-list'>
-        {students.map((student) => ( 
+        {studentsFiltres.map((student) => ( 
           <StudentCard
             prenom={student.prenom}
             nom ={student.nom}
             key={student.mail}
+            mail={student.mail}
             number={student.number}
             fil={student.fil}
             groupe={student.groupe}
             ville={student.ville}
             image={student.image}
+            onSupprimer={supprimerEtudiant}
+            onModifier={modifierEtudiant}
           />
         ))}
       </div>
