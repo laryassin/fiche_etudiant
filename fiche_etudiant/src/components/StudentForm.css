@@ -1,0 +1,31 @@
+.student{
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.student label{
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1.5;
+}
+.student input{
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.student input:hover{
+    background-color: #333;
+}
+.student input:focus{
+    border-color: blue;
+}
+

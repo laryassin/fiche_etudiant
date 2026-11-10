@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { useState } from 'react';
+import StudentForm from './components/StudentForm';
 function App() {
   const [students, setEtudiants] = useState ([
 {
@@ -47,24 +48,16 @@ function App() {
   "image" : "https://imgs.search.brave.com/21kPXcbbedm1x6DmLjKygIsWiPM_X7H0iCF00r8tOOA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2FhLzhj/L2NiL2FhOGNjYmZj/NDlmZWYyNjk5YWVi/OTc5YmY0YmIyZDdm/LmpwZw",
 }
   ])
-  function ajouterEtudiant() {
-  const nouvelEtudiant = {
-    nom: "Ben Salem",
-    prenom: "Yassine",
-    mail: "yassine.bensalem@gmail.com",
-    number: "+216 97 132 546",
-    fil: "Génie Logiciel et Systèmes d'Information",
-    groupe: "GLSI 2",
-    ville: "Ariana",
-    image: "https://imgs.search.brave.com/qVyKJdQ3T2VpzBwQO5lg-hUi7XTSHLUZlVsLw68GS5A/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG5i/LmFydHN0YXRpb24u/Y29tL3AvYXNzZXRz/L2ltYWdlcy9pbWFn/ZXMvMDgxLzE1OS85/NDMvbWVkaXVtL3Vs/bGFzZXUtZnktdHJl/YXN1cmUtbG90b3Mu/anBnPzE3Mjk1NDIz/Njc"
+  function ajouterEtudiant(nouvelEtudiant) {
+  const etudiantAvecId = {
+    ...nouvelEtudiant,
+    id: Date.now(),
   };
-  setEtudiants([...students, nouvelEtudiant]);
+  setEtudiants((oldEtudiants) => [...oldEtudiants, etudiantAvecId])
   }
-
   function supprimerEtudiant(mail) {
     setEtudiants(oldEtudiants =>{return oldEtudiants.filter(etudiant => etudiant.mail !== mail)})
   }
-
   function modifierEtudiant(mailanc){
     const etudiant = students.find((student) => student.mail === mailanc);
   if (!etudiant) return;
@@ -77,7 +70,6 @@ function App() {
   }
   return val;
   }
-
   const nom = demander("Nom :", etudiant.nom);
   if (nom === null) return;
   const prenom = demander("Prénom :", etudiant.prenom);
@@ -99,7 +91,6 @@ function App() {
         : student
     )
   );
-  
   }
   const [recherche, setRecherche] = useState("");
   const studentsFiltres = students.filter((student) => {
@@ -135,9 +126,12 @@ function App() {
     <div className='actions'>
       <button onClick={ajouterEtudiant}>+ Ajouter un etudiant</button>
     </div>
-    <Footer />
+    <Footer /> 
+    <StudentForm 
+      onAjouterEtudiant={ajouterEtudiant}
+    /> 
     </>
-  );
+  );  
 }
 
 export default App
