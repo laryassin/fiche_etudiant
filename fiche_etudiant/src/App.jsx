@@ -58,41 +58,11 @@ function App() {
   function supprimerEtudiant(mail) {
     setEtudiants(oldEtudiants =>{return oldEtudiants.filter(etudiant => etudiant.mail !== mail)})
   }
-  function modifierEtudiant(mailanc){
-    const etudiant = students.find((student) => student.mail === mailanc);
-  if (!etudiant) return;
-  function demander(texte, valeur) {
-    const saisie = prompt(texte, valeur);
-    if (saisie === null) return null;
-    const val = saisie.trim();
-    if (val === "") {
-      return valeur;
-  }
-  return val;
-  }
-  const nom = demander("Nom :", etudiant.nom);
-  if (nom === null) return;
-  const prenom = demander("Prénom :", etudiant.prenom);
-  if (prenom === null) return;
-  const mail = demander("Email :", etudiant.mail);
-  if (mail === null) return;
-  const number = demander("Téléphone :", etudiant.number);
-  if (number === null) return;
-  const fil = demander("Filière :", etudiant.fil);
-  if (fil === null) return;
-  const groupe = demander("Groupe :", etudiant.groupe);
-  if (groupe === null) return;
-  const ville = demander("Ville :", etudiant.ville);
-  if (ville === null) return;
-  setEtudiants((currentStudents) =>
-    currentStudents.map((student) =>
-      student.mail === mailanc
-        ? { ...student, nom, prenom, mail, number, fil, groupe, ville }
-        : student
-    )
-  );
-  }
   const [recherche, setRecherche] = useState("");
+  const [etudiantModifier, setEtudiantModifier]=useState(null);
+  function modifierEtudiant(etudiant){
+    setEtudiantModifier(etudiant);
+  }
   const studentsFiltres = students.filter((student) => {
   const texte = recherche.toLowerCase();
   return (
@@ -118,6 +88,7 @@ function App() {
             groupe={student.groupe}
             ville={student.ville}
             image={student.image}
+            annee={student.annee}
             onSupprimer={supprimerEtudiant}
             onModifier={modifierEtudiant}
           />
@@ -127,9 +98,7 @@ function App() {
       <button onClick={ajouterEtudiant}>+ Ajouter un etudiant</button>
     </div>
     <Footer /> 
-    <StudentForm 
-      onAjouterEtudiant={ajouterEtudiant}
-    /> 
+    <StudentForm onAjouterEtudiant={ajouterEtudiant} etudiantModifier={etudiantModifier}/> 
     </>
   );  
 }
