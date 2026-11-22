@@ -59,9 +59,9 @@ function App() {
     setEtudiants(oldEtudiants =>{return oldEtudiants.filter(etudiant => etudiant.mail !== mail)})
   }
   const [recherche, setRecherche] = useState("");
-  const [etudiantModifier, setEtudiantModifier]=useState(null);
+  const [etudiantAModifier, setEtudiantAModifier]=useState(null);
   function modifierEtudiant(etudiant){
-    setEtudiantModifier(etudiant);
+    setEtudiantAModifier(etudiant);
   }
   const studentsFiltres = students.filter((student) => {
   const texte = recherche.toLowerCase();
@@ -71,6 +71,15 @@ function App() {
     student.fil.toLowerCase().includes(texte)
   );
   });
+  function enregistrerModification(etudiantModifie){
+    setEtudiants((oldEtudiants) => oldEtudiants.map((etudiant) =>
+      etudiant.id == etudiantAModifier.id
+    ? {...etudiantModifie, id: etudiant.id}
+    : etudiant,
+    )
+   );
+   setEtudiantAModifier(null);
+  }
   return (
     <>
     <Header />
@@ -91,6 +100,7 @@ function App() {
             annee={student.annee}
             onSupprimer={supprimerEtudiant}
             onModifier={modifierEtudiant}
+            
           />
         ))}
       </div>
@@ -98,7 +108,7 @@ function App() {
       <button onClick={ajouterEtudiant}>+ Ajouter un etudiant</button>
     </div>
     <Footer /> 
-    <StudentForm onAjouterEtudiant={ajouterEtudiant} etudiantModifier={etudiantModifier}/> 
+    <StudentForm key={etudiantAModifier ? etudiantAModifier?.id : "nouveau"} onAjouterEtudiant={ajouterEtudiant} etudiantAModifier={etudiantAModifier}/> 
     </>
   );  
 }

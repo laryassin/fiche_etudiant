@@ -1,16 +1,28 @@
 import './StudentForm.css'
 import { useState } from 'react';
 
-function StudentForm({ onAjouterEtudiant }){
-    const [nom, setNom] = useState("");
-    const [prenom, setPrenom] = useState("");
-    const [mail, setEmail] = useState("");
-    const [number, setTelephone] = useState("");
-    const [fil, setFiliere] = useState("");
-    const [annee, setAnneeEtude] = useState("");
-    const [groupe, setGroupe] = useState("");
-    const [ville, setVille] = useState("");
-    const [image, setImage] = useState("");
+function StudentForm({ onAjouterEtudiant,etudiantAModifier,onModifierEtudiant, }){
+    const [nom, setNom] = useState(etudiantAModifier?.nom || "");
+    const [prenom, setPrenom] = useState(etudiantAModifier?.prenom || "");
+    const [mail, setEmail] = useState(etudiantAModifier?.mail || "");
+    const [number, setTelephone] = useState(etudiantAModifier?.number || "");
+    const [fil, setFiliere] = useState(etudiantAModifier?.fil || "");
+    const [annee, setAnneeEtude] = useState(etudiantAModifier?.annee || "");
+    const [groupe, setGroupe] = useState(etudiantAModifier?.groupe || "");
+    const [ville, setVille] = useState(etudiantAModifier?.ville || "");
+    const [image, setImage] = useState(etudiantAModifier?.image || "");
+    const [erreurs,setErreurs] = useState({});
+    function validerFormulaire(){
+        const nouvellesErreurs ={};
+        if(!FormData.nom.trim()){
+            nouvellesErreurs.nom = "Nom est obligatoire";
+        }
+        if(!FormData.prenom.trim()){
+            nouvellesErreurs.prenom = "Prenom est obligatoire";
+        }
+        setErreurs(nouvellesErreurs);
+        return Object.keys(nouvellesErreurs).length ===0;
+    }
     function handleSubmit(e){
     e.preventDefault();
     const nouvelEtudiant ={
@@ -24,14 +36,21 @@ function StudentForm({ onAjouterEtudiant }){
         ville: ville.trim(),
         image: image,
     };
-    console.log("Nouvel etudiant ajoute :", nouvelEtudiant);
-    onAjouterEtudiant(nouvelEtudiant);
+    if (etudiantAModifier){
+        onModifierEtudiant({
+            ...etudiantAModifier,
+            ...nouvelEtudiant,
+        });
+
+    } else{
+        onAjouterEtudiant(nouvelEtudiant);
+    }
 }
     return( 
     <div className='Student'>
         <form onSubmit={handleSubmit} className='student-form'>
-            <label >nom:</label><br /><input type="text" value={nom} required onChange={(e) => setNom(e.target.value)}/><br />
-            <label >prenom:</label><br /><input type="text" value={prenom} required onChange={(e) => setPrenom(e.target.value)}/><br />
+            <label >nom:</label><br /><input type="text" value={FormData.nom} required onChange={(e) => setNom(e.target.value)}/> {erreurs.nom && <p className='error-msg'>{erreurs.nom}</p>}<br />
+            <label >prenom:</label><br /><input type="text" value={FormData.prenom} required onChange={(e) => setPrenom(e.target.value)}/>{erreurs.prenom && <p className='error-msg'>{erreurs.prenom}</p>}<br />
             <label >email:</label><br /><input type="text" value={mail} required onChange={(e) =>setEmail(e.target.value)}/><br />
             <label >numero de telephone:</label><br /><input type="text" value={number} required onChange={(e) =>setTelephone(e.target.value)}/><br />
             <label >filiere:</label><br />
@@ -45,7 +64,8 @@ function StudentForm({ onAjouterEtudiant }){
             <label >groupe:</label><br /><input type="text" value={groupe} required onChange={(e) =>setGroupe(e.target.value)}/><br />
             <label >ville:</label><br /><input type="text" value={ville} required onChange={(e) =>setVille(e.target.value)}/><br />
             <label >image:</label><br /><input type="file" accept="image/*" required onChange={(e) => {const fichier = e.target.files[0];if (fichier) {setImage(URL.createObjectURL(fichier));}}}/><br />
-            <button type="submit" className='btn-submit'>Ajouter</button>
+            <h2>{etudiantAModifier ? "Modifier l'etudiant" : "Ajouter un etudiant"}</h2>
+            <button type="submit" className='btn-submit'>{etudiantAModifier ? "Modifier" : "Ajouter"}</button>
             <button type="reset">Reset</button>
         </form>
     </div>
